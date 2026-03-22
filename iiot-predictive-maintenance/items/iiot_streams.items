@@ -1,0 +1,13 @@
+sitemap iiot_dashboard label "Промисловий моніторинг (IIoT CEP)" {
+    Frame label "Поточна телеметрія станка" {
+        Text item=Machine_Vibration icon="flow" label="Вібрація [%.2f mm/s]"
+        Text item=Machine_Temperature icon="temperature" label="Температура двигуна [%.1f °C]"
+        Text item=Machine_Pressure icon="pressure" label="Тиск в системі [%.1f Bar]"
+    }
+
+    Frame label "Прогностична аналітика реального часу" {
+        Text item=Machine_State icon="status"
+        Switch item=Machine_Anomaly_Alarm icon="alarm" label="Аварійна зупинка"
+        Text item=Vibration_MA_5min label="Середня вібрація у вікні [%.1f mm/s]"
+    }
+}

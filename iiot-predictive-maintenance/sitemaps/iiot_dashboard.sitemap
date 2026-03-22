@@ -1,0 +1,13 @@
+sitemap grid_dashboard label "Smart Grid Real-time Analytics" {
+    Frame label "Поточний моніторинг потоків (Telemetry)" {
+        Text item=Grid_Frequency icon="colorwheel" label="Частота мережі [%.2f Hz]"
+        Text item=Grid_Voltage icon="energy" label="Напруга мережі [%.1f V]"
+        Text item=Grid_Load icon="line" label="Навантаження мережі [%.1f kW]"
+    }
+
+    Frame label "Стан та Комплексні події (CEP)" {
+        Text item=Grid_State icon="status"
+        Switch item=Grid_Instability_Alarm icon="alarm" label="Аварійний сигнал"
+        Text item=Load_MA_5min label="Середнє у 5-хв вікні [%.1f kW]"
+    }
+}

@@ -1,0 +1,38 @@
+import java.time.ZonedDateTime
+
+// 1. Кореляція подій (Temporal Correlation): Якщо частота падає і напруга нестабільна
+rule "Детекція нестабільності мережі (CEP)"
+when
+    Item Grid_Frequency changed or
+    Item Grid_Voltage changed
+then
+    var freq = Grid_Frequency.state as Number
+    var volt = Grid_Voltage.state as Number
+
+    // Комплексна подія: Частота < 49.5 Гц ТА Напруга < 210 В одночасно
+    if (freq < 49.5 && volt < 210) {
+        Grid_Instability_Alarm.postUpdate(ON)
+        Grid_State.postUpdate("🚨 КРИТИЧНИЙ СТАН: Просідання частоти та напруги!")
+        logError("CEP_Analytics", "Виявлено аварійний патерн мережі!")
+    } else {
+        if (Grid_Instability_Alarm.state == ON) {
+            Grid_Instability_Alarm.postUpdate(OFF)
+            Grid_State.postUpdate("✅ Мережа стабілізована")
+        }
+    }
+end
+
+// 2. Обробка вікон даних (Time Window Aggregation)
+rule "Аналіз вікна навантаження за 5 хвилин"
+when
+    Time cron "0 */5 * * * ?" // Кожні 5 хвилин
+then
+    logInfo("CEP_Analytics", "Зсув часового вікна. Оновлення ковзного середнього навантаження.")
+    
+    // В реальному OpenHAB це робиться через persistence:
+    // Load_MA_5min.postUpdate(Grid_Load.averageSince(now.minusMinutes(5)))
+    
+    // Симуляція обчислення вікна:
+    var simulatedMA = (Grid_Load.state as Number) * 0.98
+    Load_MA_5min.postUpdate(simulatedMA)
+end
